@@ -1,0 +1,611 @@
+{
+  "total_users": 25000,
+  "churn_rate": 26.86,
+  "avg_watch_time": 3.68,
+  "countries": 10,
+  "total_sessions": 100455,
+  "total_ratings": 40131,
+  "total_titles": 500,
+  "avg_rating": 3.18,
+  "avg_completion_rate": 51.5,
+  "avg_tenure_days": 563.0,
+  "avg_support_tickets": 0.52,
+  "churn_by_subscription": {
+    "Basic": 27.61,
+    "Premium": 26.02,
+    "Standard": 26.94
+  },
+  "users_by_subscription": {
+    "Basic": 8451,
+    "Premium": 8385,
+    "Standard": 8164
+  },
+  "churn_by_country": {
+    "Australia": 27.86,
+    "Canada": 27.6,
+    "Germany": 27.6,
+    "Japan": 27.55,
+    "Mexico": 26.61,
+    "Brazil": 26.54,
+    "India": 26.49,
+    "France": 26.38,
+    "USA": 26.19,
+    "UK": 25.83
+  },
+  "users_by_country": {
+    "UK": 2629,
+    "USA": 2562,
+    "Germany": 2507,
+    "India": 2503,
+    "Australia": 2491,
+    "France": 2487,
+    "Mexico": 2465,
+    "Japan": 2454,
+    "Canada": 2453,
+    "Brazil": 2449
+  },
+  "churn_by_genre": {
+    "Drama": 30.77,
+    "Fantasy": 30.26,
+    "Action": 28.2,
+    "Crime": 27.83,
+    "Adventure": 27.4,
+    "Horror": 27.01,
+    "Comedy": 26.44,
+    "Sci-Fi": 26.28,
+    "Documentary": 26.25,
+    "Romance": 25.88,
+    "Thriller": 23.87
+  },
+  "churn_by_age_band": {
+    "18-24": 26.95,
+    "25-34": 26.65,
+    "35-44": 26.64,
+    "45-54": 27.4,
+    "55+": 27.93
+  },
+  "churn_by_recency_band": {
+    "0-2d": 10.85,
+    "3-5d": 18.38,
+    "6-10d": 29.19,
+    "11-20d": 53.87,
+    "21-40d": 85.81,
+    "40d+": 99.54
+  },
+  "churn_by_watch_band": {
+    "0-1 hr": 50.18,
+    "1-2.5 hrs": 32.0,
+    "2.5-5 hrs": 19.07,
+    "5-10 hrs": 6.32,
+    "10+ hrs": 1.0
+  },
+  "churn_by_support_tickets": {
+    "0": 21.23,
+    "1": 31.91,
+    "2": 42.59,
+    "3+": 57.48
+  },
+  "churn_by_tenure_band": {
+    "0-90d": 43.96,
+    "91-180d": 39.28,
+    "181-365d": 33.79,
+    "1-2yr": 25.99,
+    "2yr+": 18.31
+  },
+  "recency_curve": [
+    {
+      "x": 0,
+      "churn_rate": 10.9,
+      "n": 11388
+    },
+    {
+      "x": 3,
+      "churn_rate": 18.4,
+      "n": 4657
+    },
+    {
+      "x": 6,
+      "churn_rate": 26.8,
+      "n": 2643
+    },
+    {
+      "x": 9,
+      "churn_rate": 36.4,
+      "n": 1611
+    },
+    {
+      "x": 12,
+      "churn_rate": 46.6,
+      "n": 1104
+    },
+    {
+      "x": 15,
+      "churn_rate": 57.2,
+      "n": 808
+    },
+    {
+      "x": 18,
+      "churn_rate": 70.0,
+      "n": 649
+    },
+    {
+      "x": 21,
+      "churn_rate": 77.4,
+      "n": 465
+    },
+    {
+      "x": 24,
+      "churn_rate": 82.1,
+      "n": 351
+    },
+    {
+      "x": 27,
+      "churn_rate": 86.6,
+      "n": 269
+    },
+    {
+      "x": 30,
+      "churn_rate": 92.6,
+      "n": 244
+    },
+    {
+      "x": 33,
+      "churn_rate": 93.0,
+      "n": 186
+    },
+    {
+      "x": 36,
+      "churn_rate": 96.2,
+      "n": 130
+    },
+    {
+      "x": 39,
+      "churn_rate": 97.5,
+      "n": 79
+    },
+    {
+      "x": 42,
+      "churn_rate": 100.0,
+      "n": 89
+    },
+    {
+      "x": 45,
+      "churn_rate": 96.6,
+      "n": 59
+    },
+    {
+      "x": 48,
+      "churn_rate": 100.0,
+      "n": 45
+    },
+    {
+      "x": 51,
+      "churn_rate": 100.0,
+      "n": 43
+    },
+    {
+      "x": 54,
+      "churn_rate": 100.0,
+      "n": 30
+    },
+    {
+      "x": 57,
+      "churn_rate": 100.0,
+      "n": 150
+    }
+  ],
+  "watch_time_curve": [
+    {
+      "x": "0",
+      "churn_rate": 50.3,
+      "n": 7075
+    },
+    {
+      "x": "1",
+      "churn_rate": 34.0,
+      "n": 3853
+    },
+    {
+      "x": "2",
+      "churn_rate": 26.4,
+      "n": 2986
+    },
+    {
+      "x": "3",
+      "churn_rate": 20.1,
+      "n": 2380
+    },
+    {
+      "x": "4",
+      "churn_rate": 13.4,
+      "n": 1877
+    },
+    {
+      "x": "5",
+      "churn_rate": 11.0,
+      "n": 1514
+    },
+    {
+      "x": "6",
+      "churn_rate": 5.8,
+      "n": 1231
+    },
+    {
+      "x": "7",
+      "churn_rate": 5.0,
+      "n": 893
+    },
+    {
+      "x": "8",
+      "churn_rate": 2.6,
+      "n": 721
+    },
+    {
+      "x": "9",
+      "churn_rate": 2.1,
+      "n": 561
+    },
+    {
+      "x": "10",
+      "churn_rate": 1.8,
+      "n": 456
+    },
+    {
+      "x": "11",
+      "churn_rate": 1.1,
+      "n": 357
+    },
+    {
+      "x": "12",
+      "churn_rate": 0.8,
+      "n": 264
+    },
+    {
+      "x": "13",
+      "churn_rate": 1.1,
+      "n": 184
+    },
+    {
+      "x": "14",
+      "churn_rate": 1.4,
+      "n": 148
+    },
+    {
+      "x": "15",
+      "churn_rate": 0.0,
+      "n": 130
+    },
+    {
+      "x": "16",
+      "churn_rate": 0.0,
+      "n": 91
+    },
+    {
+      "x": "17",
+      "churn_rate": 1.2,
+      "n": 85
+    },
+    {
+      "x": "18",
+      "churn_rate": 0.0,
+      "n": 44
+    },
+    {
+      "x": "19",
+      "churn_rate": 0.0,
+      "n": 150
+    }
+  ],
+  "model_auc": 0.863,
+  "model_accuracy": 82.4,
+  "model_precision": 75.7,
+  "model_recall": 50.9,
+  "churn_driver_coefs": {
+    "Days_Since_Login": 1.45,
+    "Watch_Time_Hours": -1.267,
+    "Support_Tickets": 0.297,
+    "Tenure_Days": -0.209,
+    "Subscription_Type_Premium": -0.069,
+    "Favorite_Genre_Crime": 0.062,
+    "Subscription_Type_Standard": -0.055,
+    "Favorite_Genre_Sci-Fi": 0.049,
+    "Country_France": -0.041,
+    "Country_UK": -0.04
+  },
+  "risk_deciles": [
+    {
+      "decile": 1,
+      "n": 2500,
+      "churn_rate": 1.1,
+      "avg_score": 0.6
+    },
+    {
+      "decile": 2,
+      "n": 2500,
+      "churn_rate": 3.1,
+      "avg_score": 2.7
+    },
+    {
+      "decile": 3,
+      "n": 2500,
+      "churn_rate": 5.7,
+      "avg_score": 5.8
+    },
+    {
+      "decile": 4,
+      "n": 2500,
+      "churn_rate": 9.1,
+      "avg_score": 9.9
+    },
+    {
+      "decile": 5,
+      "n": 2500,
+      "churn_rate": 14.6,
+      "avg_score": 14.9
+    },
+    {
+      "decile": 6,
+      "n": 2500,
+      "churn_rate": 19.7,
+      "avg_score": 20.6
+    },
+    {
+      "decile": 7,
+      "n": 2500,
+      "churn_rate": 29.3,
+      "avg_score": 27.7
+    },
+    {
+      "decile": 8,
+      "n": 2500,
+      "churn_rate": 38.3,
+      "avg_score": 38.4
+    },
+    {
+      "decile": 9,
+      "n": 2500,
+      "churn_rate": 57.8,
+      "avg_score": 58.3
+    },
+    {
+      "decile": 10,
+      "n": 2500,
+      "churn_rate": 90.0,
+      "avg_score": 89.2
+    }
+  ],
+  "top2decile_capture_pct": 55.0,
+  "top2decile_share_of_base": 20.0,
+  "genre_views": {
+    "Thriller": 13197,
+    "Sci-Fi": 12434,
+    "Documentary": 10945,
+    "Crime": 10268,
+    "Romance": 9590,
+    "Horror": 9590,
+    "Adventure": 8096,
+    "Comedy": 7808,
+    "Action": 7240,
+    "Drama": 6104,
+    "Fantasy": 5183
+  },
+  "genre_completion": {
+    "Comedy": 54.6,
+    "Horror": 53.7,
+    "Adventure": 52.7,
+    "Thriller": 52.2,
+    "Sci-Fi": 52.1,
+    "Drama": 51.5,
+    "Documentary": 51.3,
+    "Action": 50.6,
+    "Romance": 49.9,
+    "Fantasy": 49.4,
+    "Crime": 48.4
+  },
+  "top_content": [
+    {
+      "title": "Vanishing Dream",
+      "genre": "Comedy",
+      "avg_rating": 4.58,
+      "n": 139
+    },
+    {
+      "title": "Vanishing Destiny",
+      "genre": "Horror",
+      "avg_rating": 4.5,
+      "n": 188
+    },
+    {
+      "title": "Sacred Harbor",
+      "genre": "Horror",
+      "avg_rating": 4.48,
+      "n": 181
+    },
+    {
+      "title": "Wild Promise",
+      "genre": "Adventure",
+      "avg_rating": 4.44,
+      "n": 140
+    },
+    {
+      "title": "Bitter Shadow",
+      "genre": "Horror",
+      "avg_rating": 4.4,
+      "n": 150
+    },
+    {
+      "title": "Eternal Shadow",
+      "genre": "Thriller",
+      "avg_rating": 4.38,
+      "n": 265
+    },
+    {
+      "title": "Secret Mirage",
+      "genre": "Documentary",
+      "avg_rating": 4.36,
+      "n": 140
+    },
+    {
+      "title": "Bitter Night",
+      "genre": "Sci-Fi",
+      "avg_rating": 4.35,
+      "n": 161
+    },
+    {
+      "title": "Dark Kingdom",
+      "genre": "Romance",
+      "avg_rating": 4.35,
+      "n": 140
+    },
+    {
+      "title": "Rising Passage",
+      "genre": "Adventure",
+      "avg_rating": 4.26,
+      "n": 129
+    }
+  ],
+  "most_watched_content": [
+    {
+      "title": "Eternal Shadow",
+      "genre": "Thriller",
+      "views": 672
+    },
+    {
+      "title": "Eternal Reckoning",
+      "genre": "Thriller",
+      "views": 514
+    },
+    {
+      "title": "Rising Flame",
+      "genre": "Thriller",
+      "views": 504
+    },
+    {
+      "title": "Last Horizon",
+      "genre": "Thriller",
+      "views": 491
+    },
+    {
+      "title": "Reckless Passage",
+      "genre": "Thriller",
+      "views": 466
+    },
+    {
+      "title": "Vanishing Destiny",
+      "genre": "Horror",
+      "views": 454
+    },
+    {
+      "title": "Sacred Harbor",
+      "genre": "Horror",
+      "views": 448
+    },
+    {
+      "title": "Frozen Whisper",
+      "genre": "Thriller",
+      "views": 433
+    },
+    {
+      "title": "Eternal Kingdom",
+      "genre": "Thriller",
+      "views": 419
+    },
+    {
+      "title": "Hidden Legacy",
+      "genre": "Thriller",
+      "views": 410
+    }
+  ],
+  "views_by_release_year": {
+    "2015": 8650,
+    "2016": 8517,
+    "2017": 10834,
+    "2018": 11282,
+    "2019": 8333,
+    "2020": 9081,
+    "2021": 8643,
+    "2022": 7370,
+    "2023": 10062,
+    "2024": 7597,
+    "2025": 10086
+  },
+  "monthly_sessions": {
+    "2023-06": 2,
+    "2023-07": 99,
+    "2023-08": 279,
+    "2023-09": 369,
+    "2023-10": 570,
+    "2023-11": 655,
+    "2023-12": 905,
+    "2024-01": 1101,
+    "2024-02": 1141,
+    "2024-03": 1356,
+    "2024-04": 1442,
+    "2024-05": 1706,
+    "2024-06": 1732,
+    "2024-07": 2119,
+    "2024-08": 2089,
+    "2024-09": 2268,
+    "2024-10": 2436,
+    "2024-11": 2574,
+    "2024-12": 2892,
+    "2025-01": 2937,
+    "2025-02": 2872,
+    "2025-03": 3291,
+    "2025-04": 3384,
+    "2025-05": 3540,
+    "2025-06": 3551,
+    "2025-07": 3898,
+    "2025-08": 3986,
+    "2025-09": 4196,
+    "2025-10": 4426,
+    "2025-11": 4362,
+    "2025-12": 4700,
+    "2026-01": 4771,
+    "2026-02": 4620,
+    "2026-03": 5099,
+    "2026-04": 5114,
+    "2026-05": 5509,
+    "2026-06": 4464
+  },
+  "monthly_completion": {
+    "2023-06": 48.8,
+    "2023-07": 51.6,
+    "2023-08": 51.0,
+    "2023-09": 50.4,
+    "2023-10": 51.7,
+    "2023-11": 51.5,
+    "2023-12": 52.4,
+    "2024-01": 51.4,
+    "2024-02": 53.3,
+    "2024-03": 51.3,
+    "2024-04": 51.4,
+    "2024-05": 51.9,
+    "2024-06": 51.4,
+    "2024-07": 50.6,
+    "2024-08": 51.4,
+    "2024-09": 51.5,
+    "2024-10": 51.9,
+    "2024-11": 51.4,
+    "2024-12": 50.8,
+    "2025-01": 51.9,
+    "2025-02": 51.4,
+    "2025-03": 51.7,
+    "2025-04": 51.9,
+    "2025-05": 51.6,
+    "2025-06": 52.0,
+    "2025-07": 51.5,
+    "2025-08": 51.5,
+    "2025-09": 51.1,
+    "2025-10": 51.8,
+    "2025-11": 51.9,
+    "2025-12": 51.2,
+    "2026-01": 51.2,
+    "2026-02": 51.4,
+    "2026-03": 51.5,
+    "2026-04": 51.2,
+    "2026-05": 51.5,
+    "2026-06": 52.3
+  },
+  "avg_session_duration": 55.0
+}
