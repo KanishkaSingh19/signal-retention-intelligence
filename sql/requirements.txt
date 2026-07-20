@@ -1,0 +1,6 @@
+# For generating data and loading Postgres
+numpy
+pandas
+scikit-learn
+psycopg2-binary
+sqlalchemy

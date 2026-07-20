@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal — Product Analytics &amp; Retention Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;0,9..144,700;1,9..144,450&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0B0D13; --surface:#151822; --surface-2:#1C202C; --border:#282D3C;
+    --text:#EFEBE0; --muted:#8D91A3; --muted-2:#5C6072;
+    --amber:#E8A33D; --amber-dim:rgba(232,163,61,.14);
+    --teal:#56C2B4; --teal-dim:rgba(86,194,180,.14);
+    --rose:#E0636B; --rose-dim:rgba(224,99,107,.14); --rose-bright:#FF7A82;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;}
+  ::selection{background:var(--amber); color:#0B0D13;}
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .serif{font-family:'Fraunces',serif;}
+
+  .topnav{position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:18px 32px; background:rgba(11,13,19,.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--border);}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--amber); box-shadow:0 0 12px var(--amber);}
+  .brand-text{font-family:'Fraunces',serif; font-weight:600; font-size:19px;}
+  .brand-text .sub{color:var(--muted); font-weight:450; font-size:13px; font-family:'Inter'; display:block; margin-top:1px;}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .toggle{display:flex; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:3px; gap:2px;}
+  .toggle button{border:none; background:transparent; color:var(--muted); font-size:13.5px; font-weight:600; padding:8px 18px; border-radius:100px; cursor:pointer; transition:all .2s ease;}
+  .toggle button.active{background:var(--amber); color:#181206;}
+  .gh-link{font-size:13px; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:8px 14px; border-radius:100px; transition:all .2s ease; white-space:nowrap;}
+  .gh-link:hover{border-color:var(--amber); color:var(--amber);}
+
+  .view{display:none;} .view.active{display:block;}
+
+  .cs-wrap{max-width:880px; margin:0 auto; padding:0 32px 120px;}
+  .cs-hero{padding:88px 0 56px; border-bottom:1px solid var(--border);}
+  .eyebrow{font-size:12.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); margin-bottom:22px; display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono';}
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--amber);}
+  .cs-hero h1{font-family:'Fraunces',serif; font-weight:600; font-size:50px; line-height:1.1; letter-spacing:-.01em; max-width:760px;}
+  .cs-hero h1 em{font-style:italic; font-weight:450; color:var(--amber);}
+  .cs-hero .lede{font-size:18px; line-height:1.65; color:var(--muted); max-width:640px; margin-top:26px;}
+  .meta-row{display:flex; gap:32px; margin-top:40px; flex-wrap:wrap;}
+  .meta-item .k{font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.08em; font-family:'IBM Plex Mono';}
+  .meta-item .v{font-size:15px; color:var(--text); margin-top:4px; font-weight:500; font-family:'IBM Plex Mono';}
+
+  .cs-section{padding:64px 0; border-bottom:1px solid var(--border);}
+  .cs-section:last-child{border-bottom:none;}
+  .section-label{font-size:12px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; font-family:'IBM Plex Mono';}
+  .cs-section h2{font-family:'Fraunces',serif; font-weight:600; font-size:29px; margin-bottom:20px; max-width:620px; line-height:1.22;}
+  .cs-section p{font-size:16px; line-height:1.75; color:#C9C6BC; max-width:680px; margin-bottom:16px;}
+  .cs-section p strong{color:var(--text); font-weight:600;}
+  .cs-section p .hl{color:var(--amber); font-weight:600;}
+  .cs-section p .hl-rose{color:var(--rose-bright); font-weight:600;}
+  .cs-section p .hl-teal{color:var(--teal); font-weight:600;}
+
+  .stack-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:28px 0;}
+  .stack-card{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px;}
+  .stack-card .label{font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; font-family:'IBM Plex Mono';}
+  .stack-card .val{font-family:'Fraunces',serif; font-size:21px; font-weight:600; color:var(--amber);}
+  .stack-card .desc{font-size:12px; color:var(--muted); margin-top:4px;}
+
+  .callout{background:var(--surface-2); border-left:3px solid var(--amber); border-radius:0 10px 10px 0; padding:20px 24px; margin:24px 0;}
+  .callout p{margin:0; color:var(--text); font-size:15.5px;}
+  .callout.rose{border-left-color:var(--rose);}
+  .callout.teal{border-left-color:var(--teal);}
+
+  .chart-card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin:24px 0;}
+  .chart-card .cc-title{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; font-family:'IBM Plex Mono';}
+  .chart-card .cc-sub{font-size:12.5px; color:var(--muted-2); margin-bottom:16px;}
+  .chart-card canvas{max-height:280px;}
+
+  .parity-row{display:flex; flex-wrap:wrap; gap:8px; margin:24px 0;}
+  .parity-chip{background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.5px; color:var(--muted); font-family:'IBM Plex Mono';}
+  .parity-chip b{color:var(--text);}
+
+  .rec-list{margin:24px 0; display:flex; flex-direction:column; gap:14px;}
+  .rec-item{display:flex; gap:18px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px;}
+  .rec-num{font-family:'Fraunces',serif; font-weight:600; font-size:22px; color:var(--amber); min-width:32px;}
+  .rec-item h4{font-size:15.5px; margin-bottom:6px; font-weight:600;}
+  .rec-item p{font-size:14.5px; color:var(--muted); margin:0;}
+
+  .metric-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin:24px 0;}
+  .metric-strip .m{background:var(--surface); padding:18px; text-align:center;}
+  .metric-strip .m .mv{font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:var(--amber);}
+  .metric-strip .m .ml{font-size:10.5px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.05em; margin-top:6px; font-family:'IBM Plex Mono';}
+
+  .cs-footer{padding:56px 0 0; text-align:center;}
+  .cs-footer p{color:var(--muted-2); font-size:13px; font-family:'IBM Plex Mono';}
+  .cs-footer .switch-btn{display:inline-block; margin-top:18px; background:var(--amber); color:#181206; font-weight:700; font-size:14px; padding:13px 28px; border-radius:100px; text-decoration:none; cursor:pointer; border:none; font-family:'Inter';}
+
+  .dash-wrap{max-width:1280px; margin:0 auto; padding:28px 32px 80px;}
+  .dash-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:16px;}
+  .dash-head h1{font-family:'Fraunces',serif; font-weight:600; font-size:26px;}
+  .dash-head .sub{color:var(--muted); font-size:13.5px; margin-top:4px;}
+  .filter-bar{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .filter-bar .flabel{font-size:11px; color:var(--muted-2); text-transform:uppercase; margin-right:4px; font-family:'IBM Plex Mono';}
+  .chip-btn{font-size:12px; padding:7px 13px; border-radius:100px; border:1px solid var(--border); background:var(--surface); color:var(--muted); cursor:pointer; transition:all .15s ease; font-family:'IBM Plex Mono';}
+  .chip-btn.on{background:var(--teal-dim); border-color:var(--teal); color:var(--teal);}
+
+  .kpi-row{display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:24px;}
+  .kpi{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .kpi .klabel{font-size:10.5px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.05em; font-family:'IBM Plex Mono';}
+  .kpi .kval{font-family:'Fraunces',serif; font-size:23px; font-weight:600; margin-top:6px; color:var(--text);}
+  .kpi.accent .kval{color:var(--amber);}
+  .kpi.risk .kval{color:var(--rose-bright);}
+
+  .dtabs{display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--border);}
+  .dtab{font-weight:600; font-size:13.5px; color:var(--muted); background:none; border:none; padding:11px 18px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; font-family:'Inter';}
+  .dtab.active{color:var(--amber); border-bottom-color:var(--amber);}
+  .dpanel{display:none;} .dpanel.active{display:block;}
+
+  .grid-2{display:grid; grid-template-columns:1.3fr 1fr; gap:16px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:1000px){ .grid-2, .grid-3{grid-template-columns:1fr;} .kpi-row{grid-template-columns:repeat(3,1fr);} }
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-bottom:16px;}
+  .card .ctitle{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono';}
+  .card canvas{max-height:280px;}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{text-align:left; font-size:10.5px; color:var(--muted-2); text-transform:uppercase; letter-spacing:.05em; padding:8px 6px; border-bottom:1px solid var(--border); font-family:'IBM Plex Mono';}
+  td{padding:9px 6px; border-bottom:1px solid var(--border); color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  td.num, th.num{text-align:right; font-family:'IBM Plex Mono';}
+  .genre-pill{font-size:11px; color:var(--muted); background:var(--surface-2); padding:2px 8px; border-radius:100px; font-family:'IBM Plex Mono';}
+  .footer-note{margin-top:8px; color:var(--muted-2); font-size:12px; text-align:center; font-family:'IBM Plex Mono';}
+
+  @media(max-width:720px){
+    .cs-hero h1{font-size:34px;} .stack-grid{grid-template-columns:1fr 1fr;} .metric-strip{grid-template-columns:1fr 1fr;}
+    .kpi-row{grid-template-columns:repeat(2,1fr);} .topnav{padding:14px 18px;} .cs-wrap, .dash-wrap{padding-left:18px; padding-right:18px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">
+    <div class="dot"></div>
+    <div class="brand-text">Signal<span class="sub">Product Analytics &amp; Retention Intelligence</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="toggle">
+      <button id="btn-case" class="active" onclick="showView('case')">Case Study</button>
+      <button id="btn-dash" onclick="showView('dash')">Live Dashboard</button>
+    </div>
+    <a class="gh-link" href="https://github.com/KanishkaSingh19" target="_blank">GitHub ↗</a>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- CASE STUDY VIEW -->
+<!-- ============================================================ -->
+<div id="view-case" class="view active">
+  <div class="cs-wrap">
+
+    <section class="cs-hero">
+      <div class="eyebrow">Product Analytics Case Study</div>
+      <h1>The riskiest <em>20%</em> of users account for over half of all churn — here's how to find them before they leave.</h1>
+      <p class="lede">A streaming platform wanted a churn model it could actually act on, not just a KPI dashboard. This is how a behavioral risk score outperformed demographic segmentation, what the model gets wrong, and what I'd do next with more data.</p>
+      <div class="meta-row">
+        <div class="meta-item"><div class="k">Users modeled</div><div class="v">25,000</div></div>
+        <div class="meta-item"><div class="k">Watch sessions</div><div class="v">100,455</div></div>
+        <div class="meta-item"><div class="k">Ratings</div><div class="v">40,131</div></div>
+        <div class="meta-item"><div class="k">Titles</div><div class="v">500</div></div>
+        <div class="meta-item"><div class="k">Stack</div><div class="v">SQL · Python · Power BI</div></div>
+      </div>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">01 — The Question</div>
+      <h2>A quarter of users churn every cycle. Which quarter matters more than the average.</h2>
+      <p>Base churn rate across the platform sits at <span class="hl">26.9%</span>. Averages like that are useless operationally — a retention team can't target "everyone." The real question: can a small, well-targeted slice of the user base be identified <em>before</em> they leave, accurately enough to be worth acting on?</p>
+      <p>I modeled the problem across four linked tables — users, watch history, ratings, and content metadata — using SQL for aggregation and segmentation, Python (pandas + scikit-learn) for feature engineering and a churn model, and Power BI for the executive-facing views.</p>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">02 — What Doesn't Predict Churn (Much)</div>
+      <h2>Demographics are close to noise. Behavior isn't.</h2>
+      <p>Country, subscription tier, and age band all sit within a couple of points of the base rate — none of them are useful targeting criteria on their own:</p>
+      <div class="parity-row" id="parity-chips"></div>
+      <p>Favorite genre shows a wider raw spread (Drama users churn at 30.8% vs. Thriller at 23.9%), but that gap mostly <strong>disappears in the multivariate model</strong> — genre coefficients shrink to near-zero once watch time and recency are controlled for. The likely explanation: genre preference is a weak proxy for how much someone actually watches, not a cause of churn in its own right. That distinction — a variable being predictive on its own but redundant once you control for the real driver — is a classic confounding pattern worth checking for before trusting any single-variable chart.</p>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">03 — What Actually Predicts Churn</div>
+      <h2>Two behavioral signals, plus a support-ticket and tenure effect.</h2>
+      <p>A logistic regression across all available features found <strong>days since last login</strong> and <strong>cumulative watch time</strong> dominating every other coefficient — by roughly 5-7x. Two secondary signals also mattered: users filing more support tickets churned more, and newer accounts churned far more than long-tenured ones.</p>
+      <div class="metric-strip">
+        <div class="m"><div class="mv">0.863</div><div class="ml">ROC-AUC</div></div>
+        <div class="m"><div class="mv">82.4%</div><div class="ml">Accuracy</div></div>
+        <div class="m"><div class="mv">75.7%</div><div class="ml">Precision</div></div>
+        <div class="m"><div class="mv">50.9%</div><div class="ml">Recall</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="cc-title">Churn rate by account tenure</div>
+        <div class="cc-sub">New accounts are the highest-risk segment — an onboarding problem, not just a disengagement one</div>
+        <canvas id="chart-tenure"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="cc-title">Churn rate by support ticket count</div>
+        <div class="cc-sub">Each additional ticket filed roughly doubles churn likelihood</div>
+        <canvas id="chart-tickets"></canvas>
+      </div>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">04 — The Finding</div>
+      <h2>Ranking beats thresholding. The top 20% of scored users capture 55% of all churn.</h2>
+      <p>Rather than pick a single cutoff on any one metric, I scored every user with the trained model and sorted them into risk deciles. The result is a clean, monotonic lift curve — exactly what you want from a usable risk score, and a much more honest picture than a hard threshold would give:</p>
+      <div class="chart-card">
+        <div class="cc-title">Churn rate by predicted risk decile</div>
+        <div class="cc-sub">Decile 1 = lowest 10% of predicted risk · Decile 10 = highest 10%</div>
+        <canvas id="chart-deciles"></canvas>
+      </div>
+      <div class="callout rose">
+        <p>The top 2 deciles — <strong class="hl-rose">20% of the user base</strong> — contain <strong class="hl-rose">55% of everyone who actually churns</strong>. Targeting retention spend at that group instead of the full base cuts outreach volume by 5x while still reaching over half of at-risk users.</p>
+      </div>
+      <p>Recall sits at 50.9% at the model's default 0.5 threshold — meaning it misses about half of churners if used as a binary yes/no classifier. The decile/lift view sidesteps that limitation: instead of asking the model for a verdict, it asks for a <em>ranking</em>, and spends the retention budget top-down until the budget runs out. That reframing — from classification to ranking — is usually the difference between a churn model that sits in a slide deck and one a team actually uses.</p>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">05 — Recommendations</div>
+      <h2>Spend the retention budget on rank, not on rules.</h2>
+      <div class="rec-list">
+        <div class="rec-item">
+          <div class="rec-num">01</div>
+          <div><h4>Route deciles 9-10 into a proactive win-back flow</h4><p>That's 20% of users capturing 55% of churn — the single highest-leverage segment to spend retention budget on, rather than a blanket campaign.</p></div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-num">02</div>
+          <div><h4>Build a first-90-day onboarding track</h4><p>Churn is 44% in the first 90 days vs. 18% after 2 years. This is a distinct problem from general disengagement and needs its own intervention — better onboarding, early content recommendations, milestone nudges.</p></div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-num">03</div>
+          <div><h4>Flag support-ticket spikes as a retention signal, not just a support metric</h4><p>Users with 3+ tickets churn at 57% vs. 21% for zero tickets. Support and retention teams should share this signal instead of operating on separate systems.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cs-section">
+      <div class="section-label">06 — Methodology, Limitations &amp; What I'd Do Next</div>
+      <h2>Being honest about what this model can't tell you.</h2>
+      <p><strong>Data:</strong> a modeled dataset simulating a mid-sized subscription streaming service — 25,000 users, 100K+ watch sessions, 40K ratings, 500 titles across 10 countries — generated with a noisy, multi-factor process (not a hand-set rule) so the churn signal is realistic rather than a clean cliff. Favorite genre is derived from actual watch behavior per user, not assigned independently, and every watch session is constrained to fall between that user's signup date and last login — internal consistency a naive random generator wouldn't have.</p>
+      <p><strong>Model:</strong> logistic regression (scikit-learn) on standardized features, trained/test split 75/25, stratified by churn. 0.863 AUC and 82.4% accuracy are strong but not suspiciously perfect — recall of 50.9% at the default threshold is a real limitation, not an oversight, and is exactly why the recommendation above is a ranked decile approach rather than a binary flag.</p>
+      <p><strong>What I'd add with more data:</strong> payment/billing events (failed charges are usually a stronger churn signal than almost anything else and aren't in this dataset), customer service transcript sentiment, competitor pricing changes, and device/platform crash logs. I'd also want a longer observation window to build a true survival model instead of a single snapshot classifier.</p>
+      <div class="stack-grid">
+        <div class="stack-card"><div class="label">Base churn rate</div><div class="val">26.9%</div><div class="desc">Full 25K user base</div></div>
+        <div class="stack-card"><div class="label">Model AUC</div><div class="val">0.863</div><div class="desc">Held-out test set</div></div>
+        <div class="stack-card"><div class="label">Top-decile lift</div><div class="val">55%</div><div class="desc">of churn captured in top 20% of users</div></div>
+        <div class="stack-card"><div class="label">New-account risk</div><div class="val">44%</div><div class="desc">churn rate in first 90 days</div></div>
+      </div>
+    </section>
+
+    <div class="cs-footer">
+      <p>Built by Kanishka Singh · SQL / Python / Power BI</p>
+      <button class="switch-btn" onclick="showView('dash')">Explore the live dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- DASHBOARD VIEW -->
+<!-- ============================================================ -->
+<div id="view-dash" class="view">
+  <div class="dash-wrap">
+
+    <div class="dash-head">
+      <div>
+        <h1>Retention Intelligence Dashboard</h1>
+        <div class="sub">25,000 users · 100,455 sessions · 40,131 ratings · 500 titles · 10 countries</div>
+      </div>
+      <div class="filter-bar">
+        <span class="flabel">Plan</span>
+        <button class="chip-btn on" data-plan="all">All</button>
+        <button class="chip-btn" data-plan="Premium">Premium</button>
+        <button class="chip-btn" data-plan="Standard">Standard</button>
+        <button class="chip-btn" data-plan="Basic">Basic</button>
+      </div>
+    </div>
+
+    <div class="kpi-row" id="kpi-row"></div>
+
+    <div class="dtabs">
+      <button class="dtab active" data-panel="exec">Executive Overview</button>
+      <button class="dtab" data-panel="user">User &amp; Retention</button>
+      <button class="dtab" data-panel="content">Content Analytics</button>
+      <button class="dtab" data-panel="growth">Growth &amp; Engagement</button>
+    </div>
+
+    <div class="dpanel active" id="panel-exec">
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Churn rate by predicted risk decile</div><canvas id="chart-exec-deciles"></canvas></div>
+        <div class="card"><div class="ctitle">Users by subscription plan</div><canvas id="chart-exec-sub"></canvas></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Monthly watch sessions</div><canvas id="chart-exec-sessions"></canvas></div>
+        <div class="card"><div class="ctitle">Churn rate by subscription tier</div><canvas id="chart-exec-churnsub"></canvas></div>
+      </div>
+    </div>
+
+    <div class="dpanel" id="panel-user">
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Churn rate by days since last login</div><canvas id="chart-user-recency"></canvas></div>
+        <div class="card"><div class="ctitle">Churn rate by account tenure</div><canvas id="chart-user-tenure"></canvas></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Churn rate by support tickets</div><canvas id="chart-user-tickets"></canvas></div>
+        <div class="card"><div class="ctitle">Churn rate by country</div><canvas id="chart-user-country"></canvas></div>
+      </div>
+    </div>
+
+    <div class="dpanel" id="panel-content">
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Views by genre</div><canvas id="chart-content-genre"></canvas></div>
+        <div class="card"><div class="ctitle">Avg. completion rate by genre</div><canvas id="chart-content-completion"></canvas></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Top rated titles (min. 15 ratings)</div>
+          <table><thead><tr><th>Title</th><th>Genre</th><th class="num">Avg Rating</th><th class="num">Ratings</th></tr></thead><tbody id="table-top-content"></tbody></table>
+        </div>
+        <div class="card"><div class="ctitle">Most watched titles</div>
+          <table><thead><tr><th>Title</th><th>Genre</th><th class="num">Views</th></tr></thead><tbody id="table-most-watched"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dpanel" id="panel-growth">
+      <div class="grid-2">
+        <div class="card"><div class="ctitle">Monthly sessions vs. avg completion rate</div><canvas id="chart-growth-monthly"></canvas></div>
+        <div class="card"><div class="ctitle">Views by content release year</div><canvas id="chart-growth-releaseyear"></canvas></div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><div class="ctitle">Avg. session duration</div><div class="kval mono" style="font-size:28px;color:var(--amber)">55.0 <span style="font-size:14px;color:var(--muted)">min</span></div></div>
+        <div class="card"><div class="ctitle">Avg. rating across platform</div><div class="kval mono" style="font-size:28px;color:var(--amber)">3.18 <span style="font-size:14px;color:var(--muted)">/ 5</span></div></div>
+        <div class="card"><div class="ctitle">Model ROC-AUC</div><div class="kval mono" style="font-size:28px;color:var(--amber)">0.863</div></div>
+      </div>
+    </div>
+
+    <div class="footer-note">Dashboard rebuilt from the original Power BI model · Data: modeled streaming-platform dataset (probabilistic churn generator)</div>
+  </div>
+</div>
+
+<script>
+const DATA = {"total_users":25000,"churn_rate":26.86,"avg_watch_time":3.68,"countries":10,"total_sessions":100455,"total_ratings":40131,"total_titles":500,"avg_rating":3.18,"avg_completion_rate":51.5,"avg_tenure_days":563.0,"avg_support_tickets":0.52,"churn_by_subscription":{"Basic":27.61,"Premium":26.02,"Standard":26.94},"users_by_subscription":{"Basic":8451,"Premium":8385,"Standard":8164},"churn_by_country":{"Australia":27.86,"Canada":27.6,"Germany":27.6,"Japan":27.55,"Mexico":26.61,"Brazil":26.54,"India":26.49,"France":26.38,"USA":26.19,"UK":25.83},"users_by_country":{"UK":2629,"USA":2562,"Germany":2507,"India":2503,"Australia":2491,"France":2487,"Mexico":2465,"Japan":2454,"Canada":2453,"Brazil":2449},"churn_by_genre":{"Drama":30.77,"Fantasy":30.26,"Action":28.2,"Crime":27.83,"Adventure":27.4,"Horror":27.01,"Comedy":26.44,"Sci-Fi":26.28,"Documentary":26.25,"Romance":25.88,"Thriller":23.87},"churn_by_age_band":{"18-24":26.95,"25-34":26.65,"35-44":26.64,"45-54":27.4,"55+":27.93},"churn_by_recency_band":{"0-2d":10.85,"3-5d":18.38,"6-10d":29.19,"11-20d":53.87,"21-40d":85.81,"40d+":99.54},"churn_by_watch_band":{"0-1 hr":50.18,"1-2.5 hrs":32.0,"2.5-5 hrs":19.07,"5-10 hrs":6.32,"10+ hrs":1.0},"churn_by_support_tickets":{"0":21.23,"1":31.91,"2":42.59,"3+":57.48},"churn_by_tenure_band":{"0-90d":43.96,"91-180d":39.28,"181-365d":33.79,"1-2yr":25.99,"2yr+":18.31},"recency_curve":[{"x":0,"churn_rate":10.9,"n":11388},{"x":3,"churn_rate":18.4,"n":4657},{"x":6,"churn_rate":26.8,"n":2643},{"x":9,"churn_rate":36.4,"n":1611},{"x":12,"churn_rate":46.6,"n":1104},{"x":15,"churn_rate":57.2,"n":808},{"x":18,"churn_rate":70.0,"n":649},{"x":21,"churn_rate":77.4,"n":465},{"x":24,"churn_rate":82.1,"n":351},{"x":27,"churn_rate":86.6,"n":269},{"x":30,"churn_rate":92.6,"n":244},{"x":33,"churn_rate":93.0,"n":186},{"x":36,"churn_rate":96.2,"n":130},{"x":39,"churn_rate":97.5,"n":79},{"x":42,"churn_rate":100.0,"n":89},{"x":45,"churn_rate":96.6,"n":59},{"x":48,"churn_rate":100.0,"n":45},{"x":51,"churn_rate":100.0,"n":43},{"x":54,"churn_rate":100.0,"n":30},{"x":57,"churn_rate":100.0,"n":150}],"watch_time_curve":[{"x":"0","churn_rate":50.3,"n":7075},{"x":"1","churn_rate":34.0,"n":3853},{"x":"2","churn_rate":26.4,"n":2986},{"x":"3","churn_rate":20.1,"n":2380},{"x":"4","churn_rate":13.4,"n":1877},{"x":"5","churn_rate":11.0,"n":1514},{"x":"6","churn_rate":5.8,"n":1231},{"x":"7","churn_rate":5.0,"n":893},{"x":"8","churn_rate":2.6,"n":721},{"x":"9","churn_rate":2.1,"n":561},{"x":"10","churn_rate":1.8,"n":456},{"x":"11","churn_rate":1.1,"n":357},{"x":"12","churn_rate":0.8,"n":264},{"x":"13","churn_rate":1.1,"n":184},{"x":"14","churn_rate":1.4,"n":148},{"x":"15","churn_rate":0.0,"n":130},{"x":"16","churn_rate":0.0,"n":91},{"x":"17","churn_rate":1.2,"n":85},{"x":"18","churn_rate":0.0,"n":44},{"x":"19","churn_rate":0.0,"n":150}],"model_auc":0.863,"model_accuracy":82.4,"model_precision":75.7,"model_recall":50.9,"churn_driver_coefs":{"Days_Since_Login":1.45,"Watch_Time_Hours":-1.267,"Support_Tickets":0.297,"Tenure_Days":-0.209,"Subscription_Type_Premium":-0.069,"Favorite_Genre_Crime":0.062,"Subscription_Type_Standard":-0.055,"Favorite_Genre_Sci-Fi":0.049,"Country_France":-0.041,"Country_UK":-0.04},"risk_deciles":[{"decile":1,"n":2500,"churn_rate":1.1,"avg_score":0.6},{"decile":2,"n":2500,"churn_rate":3.1,"avg_score":2.7},{"decile":3,"n":2500,"churn_rate":5.7,"avg_score":5.8},{"decile":4,"n":2500,"churn_rate":9.1,"avg_score":9.9},{"decile":5,"n":2500,"churn_rate":14.6,"avg_score":14.9},{"decile":6,"n":2500,"churn_rate":19.7,"avg_score":20.6},{"decile":7,"n":2500,"churn_rate":29.3,"avg_score":27.7},{"decile":8,"n":2500,"churn_rate":38.3,"avg_score":38.4},{"decile":9,"n":2500,"churn_rate":57.8,"avg_score":58.3},{"decile":10,"n":2500,"churn_rate":90.0,"avg_score":89.2}],"top2decile_capture_pct":55.0,"top2decile_share_of_base":20.0,"genre_views":{"Thriller":13197,"Sci-Fi":12434,"Documentary":10945,"Crime":10268,"Romance":9590,"Horror":9590,"Adventure":8096,"Comedy":7808,"Action":7240,"Drama":6104,"Fantasy":5183},"genre_completion":{"Comedy":54.6,"Horror":53.7,"Adventure":52.7,"Thriller":52.2,"Sci-Fi":52.1,"Drama":51.5,"Documentary":51.3,"Action":50.6,"Romance":49.9,"Fantasy":49.4,"Crime":48.4},"top_content":[{"title":"Vanishing Dream","genre":"Comedy","avg_rating":4.58,"n":139},{"title":"Vanishing Destiny","genre":"Horror","avg_rating":4.5,"n":188},{"title":"Sacred Harbor","genre":"Horror","avg_rating":4.48,"n":181},{"title":"Wild Promise","genre":"Adventure","avg_rating":4.44,"n":140},{"title":"Bitter Shadow","genre":"Horror","avg_rating":4.4,"n":150},{"title":"Eternal Shadow","genre":"Thriller","avg_rating":4.38,"n":265},{"title":"Secret Mirage","genre":"Documentary","avg_rating":4.36,"n":140},{"title":"Bitter Night","genre":"Sci-Fi","avg_rating":4.35,"n":161},{"title":"Dark Kingdom","genre":"Romance","avg_rating":4.35,"n":140},{"title":"Rising Passage","genre":"Adventure","avg_rating":4.26,"n":129}],"most_watched_content":[{"title":"Eternal Shadow","genre":"Thriller","views":672},{"title":"Eternal Reckoning","genre":"Thriller","views":514},{"title":"Rising Flame","genre":"Thriller","views":504},{"title":"Last Horizon","genre":"Thriller","views":491},{"title":"Reckless Passage","genre":"Thriller","views":466},{"title":"Vanishing Destiny","genre":"Horror","views":454},{"title":"Sacred Harbor","genre":"Horror","views":448},{"title":"Frozen Whisper","genre":"Thriller","views":433},{"title":"Eternal Kingdom","genre":"Thriller","views":419},{"title":"Hidden Legacy","genre":"Thriller","views":410}],"views_by_release_year":{"2015":8650,"2016":8517,"2017":10834,"2018":11282,"2019":8333,"2020":9081,"2021":8643,"2022":7370,"2023":10062,"2024":7597,"2025":10086},"monthly_sessions":{"2023-06":2,"2023-07":99,"2023-08":279,"2023-09":369,"2023-10":570,"2023-11":655,"2023-12":905,"2024-01":1101,"2024-02":1141,"2024-03":1356,"2024-04":1442,"2024-05":1706,"2024-06":1732,"2024-07":2119,"2024-08":2089,"2024-09":2268,"2024-10":2436,"2024-11":2574,"2024-12":2892,"2025-01":2937,"2025-02":2872,"2025-03":3291,"2025-04":3384,"2025-05":3540,"2025-06":3551,"2025-07":3898,"2025-08":3986,"2025-09":4196,"2025-10":4426,"2025-11":4362,"2025-12":4700,"2026-01":4771,"2026-02":4620,"2026-03":5099,"2026-04":5114,"2026-05":5509,"2026-06":4464},"monthly_completion":{"2023-06":48.8,"2023-07":51.6,"2023-08":51.0,"2023-09":50.4,"2023-10":51.7,"2023-11":51.5,"2023-12":52.4,"2024-01":51.4,"2024-02":53.3,"2024-03":51.3,"2024-04":51.4,"2024-05":51.9,"2024-06":51.4,"2024-07":50.6,"2024-08":51.4,"2024-09":51.5,"2024-10":51.9,"2024-11":51.4,"2024-12":50.8,"2025-01":51.9,"2025-02":51.4,"2025-03":51.7,"2025-04":51.9,"2025-05":51.6,"2025-06":52.0,"2025-07":51.5,"2025-08":51.5,"2025-09":51.1,"2025-10":51.8,"2025-11":51.9,"2025-12":51.2,"2026-01":51.2,"2026-02":51.4,"2026-03":51.5,"2026-04":51.2,"2026-05":51.5,"2026-06":52.3},"avg_session_duration":55.0};
+
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.color = '#8D91A3';
+Chart.defaults.borderColor = '#282D3C';
+const COLORS = {amber:'#E8A33D', teal:'#56C2B4', rose:'#E0636B', roseB:'#FF7A82', muted:'#8D91A3', grid:'#20242F'};
+
+function baseGridOpts(extra){
+  return Object.assign({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{grid:{color:COLORS.grid}, ticks:{font:{size:10.5}}}, y:{grid:{color:COLORS.grid}, ticks:{font:{size:10.5}}, beginAtZero:true} }
+  }, extra||{});
+}
+
+function showView(v){
+  document.getElementById('view-case').classList.toggle('active', v==='case');
+  document.getElementById('view-dash').classList.toggle('active', v==='dash');
+  document.getElementById('btn-case').classList.toggle('active', v==='case');
+  document.getElementById('btn-dash').classList.toggle('active', v==='dash');
+  window.scrollTo({top:0, behavior:'instant'});
+  if(v==='dash' && !dashInitialized){ initDashboard(); dashInitialized = true; }
+}
+
+(function(){
+  const wrap = document.getElementById('parity-chips');
+  const items = [['Country', DATA.churn_by_country], ['Age band', DATA.churn_by_age_band], ['Subscription plan', DATA.churn_by_subscription]];
+  items.forEach(([label, obj])=>{
+    const vals = Object.values(obj);
+    const min = Math.min(...vals).toFixed(1); const max = Math.max(...vals).toFixed(1);
+    const chip = document.createElement('div');
+    chip.className = 'parity-chip';
+    chip.innerHTML = `${label}: <b>${min}% – ${max}%</b> range`;
+    wrap.appendChild(chip);
+  });
+})();
+
+function makeLineChart(id, labels, data, color, xLabel, yMax){
+  return new Chart(document.getElementById(id), {
+    type:'line',
+    data:{labels, datasets:[{data, borderColor:color, backgroundColor: color+'22', fill:true, tension:.3, pointRadius:0, borderWidth:2}]},
+    options: baseGridOpts({ scales:{
+      x:{grid:{color:COLORS.grid}, title:{display:true,text:xLabel,color:COLORS.muted,font:{size:11}}},
+      y:{grid:{color:COLORS.grid}, min:0, max:yMax||100, title:{display:true,text:'Churn rate %',color:COLORS.muted,font:{size:11}}}
+    }})
+  });
+}
+function makeBarChart(id, labels, data, color, horizontal, yMax){
+  return new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels, datasets:[{data, backgroundColor:color, borderRadius:6}]},
+    options: baseGridOpts(horizontal ? {indexAxis:'y', scales:{x:{grid:{color:COLORS.grid}, max:yMax}, y:{grid:{display:false}}}} : {scales:{x:{grid:{display:false}}, y:{grid:{color:COLORS.grid}, max:yMax}}})
+  });
+}
+
+// case study charts
+makeBarChart('chart-tenure', Object.keys(DATA.churn_by_tenure_band), Object.values(DATA.churn_by_tenure_band), COLORS.roseB, false, 50);
+makeBarChart('chart-tickets', Object.keys(DATA.churn_by_support_tickets), Object.values(DATA.churn_by_support_tickets), COLORS.amber, false, 65);
+
+new Chart(document.getElementById('chart-deciles'), {
+  type:'bar',
+  data:{
+    labels: DATA.risk_deciles.map(d=>'D'+d.decile),
+    datasets:[{data: DATA.risk_deciles.map(d=>d.churn_rate), backgroundColor: DATA.risk_deciles.map(d=> d.decile>=9 ? COLORS.roseB : d.decile<=3 ? COLORS.teal : COLORS.amber), borderRadius:6}]
+  },
+  options: baseGridOpts({scales:{x:{grid:{display:false}, title:{display:true,text:'Predicted risk decile (1=lowest, 10=highest)',color:COLORS.muted,font:{size:11}}}, y:{grid:{color:COLORS.grid}, max:100, title:{display:true,text:'Actual churn rate %',color:COLORS.muted,font:{size:11}}}}})
+});
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+let dashInitialized = false;
+let dashCharts = {};
+function fmtMonth(k){ const [y,m] = k.split('-'); return new Date(y, m-1).toLocaleString('en', {month:'short', year:'2-digit'}); }
+
+function initDashboard(){
+  const kpis = [
+    ['Total Users', DATA.total_users.toLocaleString(), false],
+    ['Churn Rate', DATA.churn_rate+'%', true],
+    ['Avg Tenure', Math.round(DATA.avg_tenure_days)+' days', false],
+    ['Countries', DATA.countries, false],
+    ['Total Sessions', DATA.total_sessions.toLocaleString(), false],
+    ['Top-Decile Capture', DATA.top2decile_capture_pct+'%', 'risk'],
+  ];
+  const kpiRow = document.getElementById('kpi-row');
+  kpis.forEach(([label,val,accent])=>{
+    const el = document.createElement('div');
+    el.className = 'kpi' + (accent===true?' accent':accent==='risk'?' risk':'');
+    el.innerHTML = `<div class="klabel">${label}</div><div class="kval mono">${val}</div>`;
+    kpiRow.appendChild(el);
+  });
+
+  document.querySelectorAll('.dtab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.dpanel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+      Object.values(dashCharts).forEach(c=>c.resize());
+    });
+  });
+
+  dashCharts.deciles = new Chart(document.getElementById('chart-exec-deciles'), {
+    type:'bar',
+    data:{labels: DATA.risk_deciles.map(d=>'D'+d.decile), datasets:[{data: DATA.risk_deciles.map(d=>d.churn_rate), backgroundColor: DATA.risk_deciles.map(d=> d.decile>=9 ? COLORS.roseB : d.decile<=3 ? COLORS.teal : COLORS.amber), borderRadius:6}]},
+    options: baseGridOpts({scales:{x:{grid:{display:false}}, y:{grid:{color:COLORS.grid}, max:100}}})
+  });
+
+  dashCharts.sub = new Chart(document.getElementById('chart-exec-sub'), {
+    type:'doughnut',
+    data:{labels: Object.keys(DATA.users_by_subscription), datasets:[{data:Object.values(DATA.users_by_subscription), backgroundColor:[COLORS.amber, COLORS.teal, COLORS.roseB], borderColor:'#151822', borderWidth:3}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:true, position:'bottom', labels:{boxWidth:10, font:{size:11}}}}}
+  });
+
+  dashCharts.sessions = new Chart(document.getElementById('chart-exec-sessions'), {
+    type:'line',
+    data:{labels: Object.keys(DATA.monthly_sessions).map(fmtMonth), datasets:[{data:Object.values(DATA.monthly_sessions), borderColor:COLORS.amber, backgroundColor:'rgba(232,163,61,.12)', fill:true, tension:.3, pointRadius:0}]},
+    options: baseGridOpts()
+  });
+
+  dashCharts.churnsub = new Chart(document.getElementById('chart-exec-churnsub'), {
+    type:'bar',
+    data:{labels: Object.keys(DATA.churn_by_subscription), datasets:[{data:Object.values(DATA.churn_by_subscription), backgroundColor:COLORS.roseB, borderRadius:6}]},
+    options: baseGridOpts({scales:{x:{grid:{display:false}}, y:{grid:{color:COLORS.grid}, max:40}}})
+  });
+
+  dashCharts.userrecency = makeLineChart('chart-user-recency', DATA.recency_curve.map(d=>d.x), DATA.recency_curve.map(d=>d.churn_rate), COLORS.roseB, 'Days since last login', 100);
+  dashCharts.usertenure = new Chart(document.getElementById('chart-user-tenure'), {
+    type:'bar', data:{labels:Object.keys(DATA.churn_by_tenure_band), datasets:[{data:Object.values(DATA.churn_by_tenure_band), backgroundColor:COLORS.teal, borderRadius:6}]},
+    options: baseGridOpts({scales:{x:{grid:{display:false}}, y:{grid:{color:COLORS.grid}, max:50}}})
+  });
+  dashCharts.usertickets = new Chart(document.getElementById('chart-user-tickets'), {
+    type:'bar', data:{labels:Object.keys(DATA.churn_by_support_tickets), datasets:[{data:Object.values(DATA.churn_by_support_tickets), backgroundColor:COLORS.amber, borderRadius:6}]},
+    options: baseGridOpts({scales:{x:{grid:{display:false}}, y:{grid:{color:COLORS.grid}, max:65}}})
+  });
+  dashCharts.usercountry = new Chart(document.getElementById('chart-user-country'), {
+    type:'bar', data:{labels:Object.keys(DATA.churn_by_country), datasets:[{data:Object.values(DATA.churn_by_country), backgroundColor:COLORS.roseB, borderRadius:6}]},
+    options: baseGridOpts({indexAxis:'y', scales:{x:{grid:{color:COLORS.grid}, max:35}, y:{grid:{display:false}}}})
+  });
+
+  dashCharts.contentgenre = new Chart(document.getElementById('chart-content-genre'), {
+    type:'bar', data:{labels:Object.keys(DATA.genre_views), datasets:[{data:Object.values(DATA.genre_views), backgroundColor:COLORS.amber, borderRadius:6}]},
+    options: baseGridOpts({indexAxis:'y', scales:{x:{grid:{color:COLORS.grid}}, y:{grid:{display:false}}}})
+  });
+  dashCharts.contentcompletion = new Chart(document.getElementById('chart-content-completion'), {
+    type:'bar', data:{labels:Object.keys(DATA.genre_completion), datasets:[{data:Object.values(DATA.genre_completion), backgroundColor:COLORS.teal, borderRadius:6}]},
+    options: baseGridOpts({scales:{x:{grid:{display:false}, ticks:{font:{size:9}}}, y:{grid:{color:COLORS.grid}, min:44, max:58}}})
+  });
+
+  const topBody = document.getElementById('table-top-content');
+  DATA.top_content.forEach(r=>{ topBody.innerHTML += `<tr><td>${r.title}</td><td><span class="genre-pill">${r.genre}</span></td><td class="num">${r.avg_rating.toFixed(2)}</td><td class="num">${r.n}</td></tr>`; });
+  const mostBody = document.getElementById('table-most-watched');
+  DATA.most_watched_content.forEach(r=>{ mostBody.innerHTML += `<tr><td>${r.title}</td><td><span class="genre-pill">${r.genre}</span></td><td class="num">${r.views}</td></tr>`; });
+
+  dashCharts.growthmonthly = new Chart(document.getElementById('chart-growth-monthly'), {
+    type:'bar',
+    data:{ labels: Object.keys(DATA.monthly_sessions).map(fmtMonth),
+      datasets:[
+        {type:'bar', label:'Sessions', data:Object.values(DATA.monthly_sessions), backgroundColor:'rgba(232,163,61,.55)', borderRadius:4, yAxisID:'y'},
+        {type:'line', label:'Completion %', data:Object.values(DATA.monthly_completion), borderColor:COLORS.teal, borderWidth:2, pointRadius:0, yAxisID:'y1', tension:.3}
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:true, position:'bottom', labels:{boxWidth:10,font:{size:10.5}}}},
+      scales:{ x:{grid:{color:COLORS.grid}, ticks:{maxTicksLimit:12}}, y:{grid:{color:COLORS.grid}, position:'left'}, y1:{grid:{display:false}, position:'right', min:40, max:60} } }
+  });
+  dashCharts.growthreleaseyear = new Chart(document.getElementById('chart-growth-releaseyear'), {
+    type:'bar', data:{labels:Object.keys(DATA.views_by_release_year), datasets:[{data:Object.values(DATA.views_by_release_year), backgroundColor:COLORS.amber, borderRadius:6}]},
+    options: baseGridOpts()
+  });
+
+  document.querySelectorAll('.chip-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.chip-btn').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      const plan = btn.dataset.plan;
+      const labels = dashCharts.churnsub.data.labels;
+      dashCharts.churnsub.data.datasets[0].backgroundColor = labels.map(l => (plan==='all'||l===plan) ? COLORS.roseB : '#3A2A2C');
+      dashCharts.churnsub.update();
+      dashCharts.sub.data.datasets[0].backgroundColor = Object.keys(DATA.users_by_subscription).map((l,i) => (plan==='all'||l===plan) ? [COLORS.amber, COLORS.teal, COLORS.roseB][i] : '#2A2D38');
+      dashCharts.sub.update();
+    });
+  });
+}
+</script>
+
+</body>
+</html>
