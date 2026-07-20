@@ -92,7 +92,7 @@ export default function CaseStudy({ onExplore }) {
         </p>
         <p>
           I modeled the problem across four linked tables — users, watch history, ratings, and content metadata
-          — using SQL (a real SQLite database, not just pandas) for aggregation and segmentation, Python
+          — using SQL (a real PostgreSQL database, not just pandas) for aggregation and segmentation, Python
           (pandas + scikit-learn) for feature engineering and the churn model, React for this dashboard, and a
           OpenAI-powered natural-language SQL agent ("Ask Signal") so anyone can query the data without writing
           SQL themselves.
@@ -201,7 +201,7 @@ export default function CaseStudy({ onExplore }) {
         <h2>How this was built, and what it can't tell you.</h2>
         <p>
           <strong>Data:</strong> a modeled dataset simulating a mid-sized streaming service, generated with a
-          noisy, multi-factor process rather than a hand-set rule, loaded into a real SQLite database.
+          noisy, multi-factor process rather than a hand-set rule, loaded into a real PostgreSQL database.
         </p>
         <p>
           <strong>Analysis:</strong> SQL for aggregation, Python/scikit-learn for the churn model (0.863 AUC,
