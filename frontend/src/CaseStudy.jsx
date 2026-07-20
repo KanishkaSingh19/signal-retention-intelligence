@@ -152,9 +152,10 @@ export default function CaseStudy({ onExplore }) {
         <div className="section-label">04 — The Finding</div>
         <h2>Ranking beats thresholding. The top 20% of scored users capture 55% of all churn.</h2>
         <p>
-          Rather than pick a single cutoff on any one metric, every user was scored with the trained model and
+          Rather than pick a single cutoff on any one metric, every user was scored by the trained model and
           sorted into risk deciles — a clean, monotonic lift curve, and a much more honest picture than a hard
-          threshold would give:
+          threshold would give. (The live Copilot ranks users with a lightweight behavioral proxy that mirrors
+          this same lift pattern without serving the full model.)
         </p>
         <div className="card">
           <div className="ctitle">Churn rate by predicted risk decile</div>
@@ -223,4 +224,3 @@ export default function CaseStudy({ onExplore }) {
     </div>
   );
 }
-
